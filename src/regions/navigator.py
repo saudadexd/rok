@@ -1,4 +1,4 @@
-navigator.pyfrom collections import deque
+from collections import deque
 from typing import List, Optional, Tuple
 from .coord_adapter import game_to_cell
 
