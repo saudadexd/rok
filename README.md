@@ -1,11 +1,1 @@
-﻿# rok
-
-Kısa açıklama: region/pattern patch çıkarma ve örnekleme aracı.
-
-## Kurulum
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-
-## Testler
-pytest -q
+﻿[above content]
