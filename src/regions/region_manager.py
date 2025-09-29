@@ -1,5 +1,4 @@
-﻿# src/regions/region_manager.py
-from dataclasses import dataclass, asdict
+﻿from dataclasses import dataclass
 from typing import List, Tuple, Dict
 import json
 import os
@@ -19,12 +18,21 @@ class Cell:
     row: int
     col: int
     bbox: BBox
+    priority: int = 0
+    slot: str = "default"
 
     def to_dict(self) -> Dict:
-        return {"id": self.id, "row": self.row, "col": self.col,
-                "bbox": {"x": self.bbox.x, "y": self.bbox.y, "w": self.bbox.w, "h": self.bbox.h}}
+        return {
+            "id": self.id,
+            "row": self.row,
+            "col": self.col,
+            "priority": self.priority,
+            "slot": self.slot,
+            "bbox": {"x": self.bbox.x, "y": self.bbox.y, "w": self.bbox.w, "h": self.bbox.h},
+        }
 
 def subdivide_bbox(main: BBox, rows: int, cols: int) -> List[Cell]:
+    """Split main bbox into rows x cols cells and return list of Cell objects."""
     if rows <= 0 or cols <= 0:
         raise ValueError("rows and cols must be > 0")
     cell_w = main.w // cols
@@ -40,6 +48,7 @@ def subdivide_bbox(main: BBox, rows: int, cols: int) -> List[Cell]:
     return cells
 
 def save_cells_json(cells: List[Cell], output_dir: str, run_meta: dict = None) -> str:
+    """Save cells and meta to a JSON file inside output_dir and return the path."""
     os.makedirs(output_dir, exist_ok=True)
     run_id = run_meta.get("run_id") if run_meta and run_meta.get("run_id") else datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
     filename = f"{run_id}_cells.json"
