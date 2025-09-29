@@ -1,5 +1,5 @@
 ﻿from dataclasses import dataclass
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Iterator, Any
 import json
 import os
 import uuid
@@ -30,6 +30,24 @@ class Cell:
             "slot": self.slot,
             "bbox": {"x": self.bbox.x, "y": self.bbox.y, "w": self.bbox.w, "h": self.bbox.h},
         }
+
+    # Backwards-compatible tuple-like access: (x, y, w, h)
+    def __getitem__(self, idx: int) -> Any:
+        if idx == 0:
+            return self.bbox.x
+        if idx == 1:
+            return self.bbox.y
+        if idx == 2:
+            return self.bbox.w
+        if idx == 3:
+            return self.bbox.h
+        raise IndexError("Cell index out of range")
+
+    def __iter__(self) -> Iterator:
+        yield self.bbox.x
+        yield self.bbox.y
+        yield self.bbox.w
+        yield self.bbox.h
 
 def subdivide_bbox(main: BBox, rows: int, cols: int) -> List[Cell]:
     """Split main bbox into rows x cols cells and return list of Cell objects."""
